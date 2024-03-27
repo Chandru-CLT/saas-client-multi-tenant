@@ -10,7 +10,6 @@ const AddTaskPage = () => {
     organisationName: '',
     projectName: '',
     taskName: '',
-    currentStatus: '',
     assignedTo: '',
   });
 
@@ -38,17 +37,17 @@ const AddTaskPage = () => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            name="taskName"
-            placeholder="Task Name"
-            value={formData.taskName}
+            name="projectName"
+            placeholder="Project Name"
+            value={formData.projectName}
             onChange={handleChange}
             required
           />
           <input
             type="text"
-            name="currentStatus"
-            placeholder="Current Status"
-            value={formData.currentStatus}
+            name="taskName"
+            placeholder="Task"
+            value={formData.taskName}
             onChange={handleChange}
             required
           />
