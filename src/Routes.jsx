@@ -1,28 +1,48 @@
 import { createBrowserRouter } from "react-router-dom";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
-import ViewTicket from "./Pages/ViewTicket";
-import CompanyHomePage from "./Pages/CompanyHomePage";
+import CompanyHomePage from "./Pages/CompanyHomePage/CompanyHomePage";
+import CompanySignIn from "./Pages/CompanySignIn";
+import AddStaff from "./Pages/CompanyHomePage/AddStaff/AddStaff";
+import StaffHomePage from "./Pages/StaffHomePage/StaffHomePage";
+import AddTaskPage from "./Pages/CompanyHomePage/AddTaskPage/AddTaskPage";
+import CompanyProjects from "./Pages/CompanyHomePage/CompanyProjects/CompanyProjects";
 
 export const appRouters = createBrowserRouter([
     {
-        path:"/",
+        path: "/",
         element: <Signup />
     },
     {
-        path:"/signin",
+        path: "/:organisationName/signin",
         element: <Signin />
     },
     {
-        path: "/:company-name",
+        path: "/:organisationName/admin/signin",
+        element: <CompanySignIn />
+    },
+    {
+        path: "/:organisationName/admin/home",
         element: <CompanyHomePage />
     },
     {
-        path:"/viewticket",
-        element: <ViewTicket />
+        path: "/:organisationName/admin/add-staff",
+        element: <AddStaff />
+    },
+    {
+        path: "/:organisationName/admin/add-task",
+        element: <AddTaskPage />
+    },
+    {
+        path: "/:organisationName/admin/projects",
+        element: <CompanyProjects />
+    },
+    {
+        path: "/:organisationName/home",
+        element: <StaffHomePage />
     },
     {
         path: "*",
-        element: <Signin />
+        element: <Signup />
     },
 ])

@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-const Signin = () => {
+const CompanySignIn = () => {
     const { organisationName } = useParams()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
+
+    console.log(organisationName);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,15 +19,12 @@ const Signin = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        navigate(`/${organisationName}/home`)
-
-        // Other API call and logic
+        navigate(`/${organisationName}/admin/home`)
     };
-
     return (
         <div className='auth_container'>
             <div className='auth_container__inner'>
-                <header>Odonine staff login</header>
+                <header>Odonine admin login</header>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="email"
@@ -44,11 +43,11 @@ const Signin = () => {
                         required
                     />
                     <button className='todo_royalBlue_button' type="submit">Sign in</button>
-                    <Link className='navigate' to={`/${organisationName}/admin/signin`}>Admin login</Link>
+                    <Link className='navigate' to={`/${organisationName}/signin`}>Staff login</Link>
                 </form>
             </div>
         </div>
     )
 }
 
-export default Signin
+export default CompanySignIn

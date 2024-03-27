@@ -22,34 +22,8 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { name, email, password, confirmPassword } = formData;
-
-        if (password.length >= 8) {
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-
-            // signupApi({ name, email, password, confirmPassword }).then(res => {
-            //     console.log(res.data.data);
-
-            //     const data = {
-            //         token: res.data.token,
-            //         userName: res.data.data.user.name,
-            //         userId: res.data.data.user._id,
-            //     }
-            //     saveLoginToken(data)
-            //     navigate('/')
-            //     window.location.reload(); // Reload the page
-            // }).catch(err => {
-            //     alert(err.response.data.data.message);
-            // })
-
-        } else {
-            alert("Password length must be greater than 8")
-        }
+        navigate(`/${formData.organisatioName}/admin/home`)
     };
-
 
     return (
         <div className='auth_container'>
@@ -58,7 +32,7 @@ const Signup = () => {
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        name="name"
+                        name="organisatioName"
                         placeholder="Organisation Name"
                         value={formData.organisatioName}
                         onChange={handleChange}
@@ -105,7 +79,7 @@ const Signup = () => {
                         required
                     />
                     <button className='todo_royalBlue_button' type="submit">Sign Up</button>
-                    <Link className='navigate' to={`/sign-in`}>Signin</Link>
+                    {/*<Link className='navigate' to={`/sign-in`}>Signin</Link> */}
                 </form>
             </div>
         </div>

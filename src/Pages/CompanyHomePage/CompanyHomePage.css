@@ -1,0 +1,54 @@
+/* company home page */
+
+.CompanyHomePage_container {
+    /* border: 1px solid red; */
+
+    box-sizing: border-box;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+
+    width: 100vw;
+    height: 100vh;
+
+    padding: 1rem;
+
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+/* .CompanyHomePage_Inner {
+    border: 1px solid red;
+} */
+
+.staff_List {
+    /* border: 1px solid red; */
+    display: flex;
+
+    gap: 1rem;
+}
+
+.CompanyHomePage_Inner header {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout_ {
+    /* border: 1px solid red; */
+    cursor: pointer;
+}
+
+.logout_:hover {
+    color: red;
+}
+
+.CompanyHomePage_mainMenu {
+    /* border: 1px solid red; */
+    width: 96%;
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 1rem;
+}

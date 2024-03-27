@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import './AddStaff.css'
 
-const Signin = () => {
+import { useNavigate, useParams } from 'react-router-dom';
+
+const AddStaff = () => {
     const { organisationName } = useParams()
     const navigate = useNavigate()
+
     const [formData, setFormData] = useState({
+        name: '',
         email: '',
         password: '',
+        confirmPassword: '',
+        mobileNumber: ""
     });
 
     const handleChange = (e) => {
@@ -16,22 +22,36 @@ const Signin = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        navigate(`/${organisationName}/home`)
-
-        // Other API call and logic
+        // const { name, email, password, confirmPassword, organisatioName, mobileNumber } = formData;
+        navigate(`/${organisationName}/admin/home`)
     };
 
     return (
         <div className='auth_container'>
             <div className='auth_container__inner'>
-                <header>Odonine staff login</header>
+                <header>Odonine add staff</header>
                 <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
                     <input
                         type="email"
                         name="email"
                         placeholder="Email"
                         value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="tel"
+                        name="mobileNumber"
+                        placeholder="Mobile Number"
+                        value={formData.mobileNumber}
                         onChange={handleChange}
                         required
                     />
@@ -43,12 +63,12 @@ const Signin = () => {
                         onChange={handleChange}
                         required
                     />
-                    <button className='todo_royalBlue_button' type="submit">Sign in</button>
-                    <Link className='navigate' to={`/${organisationName}/admin/signin`}>Admin login</Link>
+                    <button className='todo_royalBlue_button' type="submit">Add staff</button>
+                    {/*<Link className='navigate' to={`/sign-in`}>Signin</Link> */}
                 </form>
             </div>
         </div>
     )
 }
 
-export default Signin
+export default AddStaff
