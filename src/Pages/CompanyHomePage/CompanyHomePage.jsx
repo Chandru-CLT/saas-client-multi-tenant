@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import './CompanyHomePage.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { getTaskListApi } from '../../Api/Task'
 
 const CompanyHomePage = () => {
   const navigate = useNavigate()
   const { organisationName } = useParams()
+  const [apiData, setapiData] = useState([])
   const [formData, setFormData] = useState({
     organisatioName: '',
   });
 
-  useEffect(()=>{
-    
+  useEffect(() => {
+    getTaskListApi(organisationName).then(res => {
+      // console.log(res.data);
+      setapiData(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
   })
 
   const handleChange = (e) => {
@@ -78,7 +85,7 @@ const CompanyHomePage = () => {
                   <th>Sno</th>
                   <th>Project</th>
                   <th>Task</th>
-                  <th>Current Status</th>
+                  <th>Assigned to</th>
                   <th></th>
                   <th></th>
                 </tr>
@@ -88,109 +95,25 @@ const CompanyHomePage = () => {
           <div class="tbl-content">
             <table cellpadding="0" cellspacing="0" border="0">
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Odonine </td>
-                  <td>Bug in signup page</td>
-                  <td>Assigned</td>
-                  <td>
-                    <select>
-                      <option value="assigned">Assigned</option>
-                      <option value="working">Working</option>
-                      <option value="completed">Completed</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button>Update</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Odonine </td>
-                  <td>Bug in signup page</td>
-                  <td>Assigned</td>
-                  <td>
-                    <select>
-                      <option value="assigned">Assigned</option>
-                      <option value="working">Working</option>
-                      <option value="completed">Completed</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button>Update</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Odonine </td>
-                  <td>Bug in signup page</td>
-                  <td>Assigned</td>
-                  <td>
-                    <select>
-                      <option value="assigned">Assigned</option>
-                      <option value="working">Working</option>
-                      <option value="completed">Completed</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button>Update</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Odonine </td>
-                  <td>Bug in signup page</td>
-                  <td>Assigned</td>
-                  <td>
-                    <select>
-                      <option value="assigned">Assigned</option>
-                      <option value="working">Working</option>
-                      <option value="completed">Completed</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button>Update</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Odonine </td>
-                  <td>Bug in signup page</td>
-                  <td>Assigned</td>
-                  <td>
-                    <select>
-                      <option value="assigned">Assigned</option>
-                      <option value="working">Working</option>
-                      <option value="completed">Completed</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button>Update</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Odonine </td>
-                  <td>Bug in signup page</td>
-                  <td>Assigned</td>
-                  <td>
-                    <select>
-                      <option value="assigned">Assigned</option>
-                      <option value="working">Working</option>
-                      <option value="completed">Completed</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button>Update</button>
-                  </td>
-                </tr>
-
+                {apiData.map((data, index) => (
+                  <tr>
+                    <td>{index + 1}</td>
+                    <td>{data.projectName}</td>
+                    <td>{data.taskInfo}</td>
+                    <td>{data.assignedTo}</td>
+                    <td>
+                      <select>
+                        <option value="assigned">Assigned</option>
+                        <option value="working">Working</option>
+                        <option value="completed">Completed</option>
+                        <option value="closed">Closed</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button>Update</button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

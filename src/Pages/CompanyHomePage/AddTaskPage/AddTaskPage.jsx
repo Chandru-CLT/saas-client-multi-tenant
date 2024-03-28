@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddTaskPage.css'
 import { useNavigate, useParams } from 'react-router-dom';
+import { getStaffListApi } from '../../../Api/Staff';
+import { companyCreateTaskApi } from '../../../Api/Task';
 
 const AddTaskPage = () => {
   const { organisationName } = useParams()
   const navigate = useNavigate()
+  const [staffList, setstaffList] = useState([])
 
-
+  useEffect(() => {
+    getStaffListApi(organisationName).then(res => {
+      console.log(res.data);
+      setstaffList(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+  })
 
   const [formData, setFormData] = useState({
-    organisationName: '',
+    organisationName,
     projectName: '',
     taskName: '',
     assignedTo: '',
@@ -17,32 +27,38 @@ const AddTaskPage = () => {
   });
 
   // Example dataset with staff names
-  const staffDataset = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Smith' },
-    { id: 3, name: 'Alice Johnson' },
-  ];
+  // const staffDataset = [
+  //   { id: 1, name: 'John Doe' },
+  //   { id: 2, name: 'Jane Smith' },
+  //   { id: 3, name: 'Alice Johnson' },
+  // ];
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     let id = '';
-    // Find the staff member with the selected name and get their ID
-    const selectedStaff = staffDataset.find((staff) => staff.name === value);
-    if (selectedStaff) {
-      id = selectedStaff.id;
+    if (staffList.length > 0) {
+      const selectedStaff = staffList.find((staff) => staff.name === value);
+      if (selectedStaff) {
+        id = selectedStaff._id;
+      }
     }
     setFormData({
       ...formData,
       [name]: value,
-      // Save the ID in the state
       assignedToId: id,
     });
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate(`/${organisationName}/admin/home`)
-    console.log(formData);
+
+    companyCreateTaskApi(formData).then(res => {
+      console.log(res.data);
+      navigate(`/${organisationName}/admin/home`)
+    }).catch(err => {
+      console.log(err);
+    })
   };
 
   return (
@@ -76,8 +92,8 @@ const AddTaskPage = () => {
             required
           />
           <datalist id="staffList">
-            {staffDataset.map((staff) => (
-              <option key={staff.id} value={staff.name} />
+            {staffList.map((staff) => (
+              <option key={staff._id} value={staff.name} />
             ))}
           </datalist>
           <button className='todo_royalBlue_button' type="submit">Add task</button>

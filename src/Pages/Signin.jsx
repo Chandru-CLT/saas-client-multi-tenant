@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { staffSignInApi } from '../Api/Staff';
 
 const Signin = () => {
     const { organisationName } = useParams()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
+        subDomine: organisationName,
         email: '',
         password: '',
     });
@@ -16,10 +18,14 @@ const Signin = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // console.log(formData);
+        staffSignInApi(formData).then(res => {
+            console.log(res.data);
+            // navigate(`/${organisationName}/home`)
 
-        navigate(`/${organisationName}/home`)
-
-        // Other API call and logic
+        }).catch(err => {
+            console.log(err);
+        })
     };
 
     return (
