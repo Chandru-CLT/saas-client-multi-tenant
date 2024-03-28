@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './CompanyProjects.css'
 import { useNavigate, useParams } from 'react-router-dom';
-import { companyCreateProjectApi } from '../../../Api/Company';
+import { companyCreateProjectApi, projectListApi } from '../../../Api/Company';
 import { getOrganisationName } from '../../../Utils/Localstorage';
 
 const CompanyProjects = () => {
@@ -13,6 +13,18 @@ const CompanyProjects = () => {
     projectName: '',
   });
 
+  const [projectList, setprojectList] = useState([])
+
+  useEffect(() => {
+    projectListApi(organisationName).then(res => {
+      console.log(res.data);
+      setprojectList(res.data);
+
+    }).catch(err => {
+      console.log(err);
+    })
+  }, [formData.projectName])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -21,19 +33,20 @@ const CompanyProjects = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    companyCreateProjectApi(formData).then(res=>{
+    companyCreateProjectApi(formData).then(res => {
       console.log(res);
-      navigate(`/${organisationName}/admin/home`)
+      setFormData({ ...formData, projectName: '' }); // Clear the projectName input
+      // navigate(`/${organisationName}/admin/home`)
 
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err);
-    })
-
+    });
   };
 
+
   return (
-    <div className='auth_container'>
-      <div className='auth_container__inner'>
+    <div className='CompanyProjects_container'>
+      <div className='CompanyProjects__inner'>
         <header>Odonine add your project</header>
         <form onSubmit={handleSubmit}>
           <input
@@ -43,17 +56,22 @@ const CompanyProjects = () => {
             value={formData.projectName}
             onChange={handleChange}
             required
+            autoComplete="off" // Add this line
           />
           <button className='todo_royalBlue_button' type="submit">Add Project</button>
           {/*<Link className='navigate' to={`/sign-in`}>Signin</Link> */}
         </form>
 
-        <header>Current Projects</header>
-        <input
-          value="Odinine"
-          onChange={handleChange}
-          disabled
-        />
+        <div className='companyProjectList'>
+          <header>Current Projects</header>
+          {projectList.map((data, index) => (
+            <input
+              value={data.projectName}
+              onChange={handleChange}
+              disabled
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { companySigninApi } from '../Api/Auth';
 
 const CompanySignIn = () => {
     const { organisationName } = useParams()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
+        subDomine: organisationName,
         email: '',
         password: '',
     });
 
-    console.log(organisationName);
+    // console.log(organisationName);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,8 +20,13 @@ const CompanySignIn = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        companySigninApi(formData).then(res => {
+            // console.log("This is API response", res.data.user);
+            navigate(`/${organisationName}/admin/home`)
 
-        navigate(`/${organisationName}/admin/home`)
+        }).catch(err => {
+            console.log(err);
+        })
     };
     return (
         <div className='auth_container'>

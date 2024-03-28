@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './CompanyHomePage.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getTaskListApi } from '../../Api/Task'
+import Header from '../../Components/Header/Header'
 
 const CompanyHomePage = () => {
   const navigate = useNavigate()
@@ -10,15 +11,6 @@ const CompanyHomePage = () => {
   const [formData, setFormData] = useState({
     organisatioName: '',
   });
-
-  useEffect(() => {
-    getTaskListApi(organisationName).then(res => {
-      // console.log(res.data);
-      setapiData(res.data);
-    }).catch(err => {
-      console.log(err);
-    })
-  })
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,18 +31,14 @@ const CompanyHomePage = () => {
     navigate(`/${organisationName}/admin/projects`)
   }
 
-  const logout_ = () => {
-    navigate(`/${organisationName}/admin/signin`)
-  }
+
 
 
   return (
     <div className='CompanyHomePage_container'>
       <div className='CompanyHomePage_Inner'>
-        <header>
-          <h1>{organisationName}</h1>
-          <p onClick={logout_} className='logout_'>LOGOUT</p>
-        </header>
+        <Header/>
+        
 
         <form onSubmit={handleSubmit}>
           <div>
@@ -71,55 +59,12 @@ const CompanyHomePage = () => {
         </form>
 
         <div className='CompanyHomePage_mainMenu'>
-          <button className='btn' onClick={addTask}>Add Task</button>
-          <button className='btn' onClick={addProject}>Add project</button>
-          <button className='btn' onClick={addStaff}>Add Staff</button>
+          <button onClick={addTask}>Tasks</button>
+          <button onClick={addProject}>Projects</button>
+          <button onClick={addStaff}>Staffs</button>
         </div>
 
-        <section className='StaffHomePage_'>
-          <h2>Tasks Assigned to staffs</h2>
-          <div class="tbl-header">
-            <table cellpadding="0" cellspacing="0" border="0">
-              <thead>
-                <tr>
-                  <th>Sno</th>
-                  <th>Project</th>
-                  <th>Task</th>
-                  <th>Assigned to</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-            </table>
-          </div>
-          <div class="tbl-content">
-            <table cellpadding="0" cellspacing="0" border="0">
-              <tbody>
-                {apiData.map((data, index) => (
-                  <tr>
-                    <td>{index + 1}</td>
-                    <td>{data.projectName}</td>
-                    <td>{data.taskInfo}</td>
-                    <td>{data.assignedTo}</td>
-                    <td>
-                      <select>
-                        <option value="assigned">Assigned</option>
-                        <option value="working">Working</option>
-                        <option value="completed">Completed</option>
-                        <option value="closed">Closed</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button>Update</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/*<div className='staff_Logout' onClick={logout}>Logout</div> */}
-        </section>
+        
       </div>
     </div>
   )

@@ -46,9 +46,28 @@
 
 .CompanyHomePage_mainMenu {
     /* border: 1px solid red; */
-    width: 96%;
+    width: 100%;
     display: flex;
-    justify-content: flex-end;
-
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
+    padding: 1rem;
+}
+
+.CompanyHomePage_mainMenu button {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 0.5rem;
+    width: 20%;
+    height: 100px;
+
+    background: #9fe96e;
+}
+
+.CompanyHomePage_mainMenu button:hover {
+    /* border: none; */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: 0.2s;
+    /* Add box shadow */
 }

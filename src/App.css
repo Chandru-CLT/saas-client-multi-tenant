@@ -269,6 +269,13 @@
     align-items: center;
 
     background: whitesmoke;
+
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.auth_container::-webkit-scrollbar {
+    display: none;
 }
 
 .auth_container__inner {
@@ -311,4 +318,3 @@
     justify-content: center;
     align-items: center;
 }
-
