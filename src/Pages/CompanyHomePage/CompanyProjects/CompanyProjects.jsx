@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import './CompanyProjects.css'
 import { useNavigate, useParams } from 'react-router-dom';
+import { companyCreateProjectApi } from '../../../Api/Company';
+import { getOrganisationName } from '../../../Utils/Localstorage';
 
 const CompanyProjects = () => {
   const { organisationName } = useParams()
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    organisatioName: '',
+    organisationName: getOrganisationName(),
     projectName: '',
   });
 
@@ -18,7 +20,15 @@ const CompanyProjects = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate(`/${organisationName}/admin/home`)
+
+    companyCreateProjectApi(formData).then(res=>{
+      console.log(res);
+      navigate(`/${organisationName}/admin/home`)
+
+    }).catch(err=>{
+      console.log(err);
+    })
+
   };
 
   return (

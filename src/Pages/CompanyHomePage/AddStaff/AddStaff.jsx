@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './AddStaff.css'
 
 import { useNavigate, useParams } from 'react-router-dom';
+import { getOrganisationName } from '../../../Utils/Localstorage';
+import { companyCreateStaffApi } from '../../../Api/Staff';
 
 const AddStaff = () => {
     const { organisationName } = useParams()
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
+        organisationName: getOrganisationName(),
         name: '',
         email: '',
-        password: '',
-        confirmPassword: '',
-        mobileNumber: ""
+        mobileNumber: "",
+        password: ''
     });
 
     const handleChange = (e) => {
@@ -23,7 +25,12 @@ const AddStaff = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // const { name, email, password, confirmPassword, organisatioName, mobileNumber } = formData;
-        navigate(`/${organisationName}/admin/home`)
+        companyCreateStaffApi(formData).then(res => {
+            console.log(res.data);
+            navigate(`/${organisationName}/admin/home`)
+        }).then(err => {
+            console.log(err);
+        })
     };
 
     return (

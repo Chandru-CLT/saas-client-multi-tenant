@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './CompanyHomePage.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
@@ -8,6 +8,10 @@ const CompanyHomePage = () => {
   const [formData, setFormData] = useState({
     organisatioName: '',
   });
+
+  useEffect(()=>{
+    
+  })
 
   const handleChange = (e) => {
     const { name, value } = e.target;

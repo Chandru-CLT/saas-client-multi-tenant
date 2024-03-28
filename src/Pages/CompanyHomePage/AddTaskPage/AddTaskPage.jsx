@@ -6,11 +6,14 @@ const AddTaskPage = () => {
   const { organisationName } = useParams()
   const navigate = useNavigate()
 
+
+
   const [formData, setFormData] = useState({
     organisationName: '',
     projectName: '',
     taskName: '',
     assignedTo: '',
+    assignedToId: '',
   });
 
   // Example dataset with staff names
@@ -20,14 +23,26 @@ const AddTaskPage = () => {
     { id: 3, name: 'Alice Johnson' },
   ];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    let id = '';
+    // Find the staff member with the selected name and get their ID
+    const selectedStaff = staffDataset.find((staff) => staff.name === value);
+    if (selectedStaff) {
+      id = selectedStaff.id;
+    }
+    setFormData({
+      ...formData,
+      [name]: value,
+      // Save the ID in the state
+      assignedToId: id,
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate(`/${organisationName}/admin/home`)
+    console.log(formData);
   };
 
   return (
