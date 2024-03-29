@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, CSSProperties  } from 'react'
 import './CompanyProjects.css'
 import { useNavigate, useParams } from 'react-router-dom';
 import { companyCreateProjectApi, projectListApi } from '../../../Api/Company';
 import { getOrganisationName } from '../../../Utils/Localstorage';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const CompanyProjects = () => {
   const { organisationName } = useParams()
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(true)
 
   const [formData, setFormData] = useState({
     organisationName: getOrganisationName(),
     projectName: '',
   });
+
 
   const [projectList, setprojectList] = useState([])
 
@@ -19,10 +22,12 @@ const CompanyProjects = () => {
     projectListApi(organisationName).then(res => {
       console.log(res.data);
       setprojectList(res.data);
-
     }).catch(err => {
       console.log(err);
     })
+    if (projectList !== 0) {
+      setIsLoading(false)
+    }
   }, [formData.projectName])
 
   const handleChange = (e) => {
@@ -32,12 +37,12 @@ const CompanyProjects = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setIsLoading(true)
     companyCreateProjectApi(formData).then(res => {
       console.log(res);
       setFormData({ ...formData, projectName: '' }); // Clear the projectName input
       // navigate(`/${organisationName}/admin/home`)
-
+      setIsLoading(false)
     }).catch(err => {
       console.log(err);
     });
@@ -62,15 +67,31 @@ const CompanyProjects = () => {
           {/*<Link className='navigate' to={`/sign-in`}>Signin</Link> */}
         </form>
 
+
         <div className='companyProjectList'>
           <header>Current Projects</header>
-          {projectList.map((data, index) => (
-            <input
-              value={data.projectName}
-              onChange={handleChange}
-              disabled
+          {isLoading ? (
+              <ClipLoader
+              color={"#4169e1"}
+              loading={isLoading}
+              css={{ display: "block", margin: "0 auto", borderColor: "red" }}
+              size={100}
+              aria-label="Loading Spinner"
+              data-testid="loader"
             />
-          ))}
+          
+            ) : (
+              <>
+                {projectList.map((data, index) => (
+                  <input
+                    key={index} // added key prop for unique identification
+                    value={data.projectName}
+                    onChange={handleChange}
+                    disabled
+                  />
+                ))}
+              </>
+            )}
         </div>
       </div>
     </div>

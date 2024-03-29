@@ -7,6 +7,7 @@ import AddStaff from "./Pages/CompanyHomePage/AddStaff/AddStaff";
 import StaffHomePage from "./Pages/StaffHomePage/StaffHomePage";
 import AddTaskPage from "./Pages/CompanyHomePage/AddTaskPage/AddTaskPage";
 import CompanyProjects from "./Pages/CompanyHomePage/CompanyProjects/CompanyProjects";
+import FormValidation from "./Pages/Testing/FormValidation";
 
 export const appRouters = createBrowserRouter([
     {
@@ -40,6 +41,10 @@ export const appRouters = createBrowserRouter([
     {
         path: "/:organisationName/home",
         element: <StaffHomePage />
+    },
+    {
+        path: "/testing",
+        element: <FormValidation />
     },
     {
         path: "*",
