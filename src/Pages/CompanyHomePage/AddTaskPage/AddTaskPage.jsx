@@ -3,67 +3,80 @@ import './AddTaskPage.css'
 import { useNavigate, useParams } from 'react-router-dom';
 import { getStaffListApi } from '../../../Api/Staff';
 import { companyCreateTaskApi, getTaskListApi } from '../../../Api/Task';
+import { projectListApi } from '../../../Api/Company';
 
 const AddTaskPage = () => {
   const { organisationName } = useParams()
-  // const navigate = useNavigate()
 
   const [apiData, setapiData] = useState([])
   const [staffList, setstaffList] = useState([])
-
+  const [projectList, setprojectList] = useState([])
+  
   useEffect(() => {
     getTaskListApi(organisationName).then(res => {
-      // console.log(res.data);
       setapiData(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+
+    getStaffListApi(organisationName).then(res => {
+      setstaffList(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+
+    projectListApi(organisationName).then(res => {
+      setprojectList(res.data);
     }).catch(err => {
       console.log(err);
     })
   }, [apiData])
 
-  useEffect(() => {
-    getStaffListApi(organisationName).then(res => {
-      console.log(res.data);
-      setstaffList(res.data);
-    }).catch(err => {
-      console.log(err);
-    })
-  })
-
   const [formData, setFormData] = useState({
     organisationName,
     projectName: '',
+    projectId: '',
     taskName: '',
     assignedTo: '',
     assignedToId: '',
   });
 
-  // Example dataset with staff names
-  // const staffDataset = [
-  //   { id: 1, name: 'John Doe' },
-  //   { id: 2, name: 'Jane Smith' },
-  //   { id: 3, name: 'Alice Johnson' },
-  // ];
-
   const handleChange = (event) => {
     const { name, value } = event.target;
-    let id = '';
-    if (staffList.length > 0) {
-      const selectedStaff = staffList.find((staff) => staff.name === value);
-      if (selectedStaff) {
-        id = selectedStaff._id;
-      }
-    }
-    setFormData({
-      ...formData,
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-      assignedToId: id,
-    });
+    }));
   };
 
+  const handleProjectNameChange = (event) => {
+    const { value } = event.target;
+    const selectedProject = projectList.find((project) => project.projectName === value);
+    const pid = selectedProject ? selectedProject._id : '';
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      projectName: value,
+      projectId: pid,
+    }));
+  };
+
+  const handleAssignedToChange = (event) => {
+    const { value } = event.target;
+    const selectedStaff = staffList.find((staff) => staff.name === value);
+    const id = selectedStaff ? selectedStaff._id : '';
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      assignedTo: value,
+      assignedToId: id,
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log(formData);
     companyCreateTaskApi(formData).then(res => {
       console.log(res.data);
       // navigate(`/${organisationName}/admin/home`)
@@ -76,17 +89,23 @@ const AddTaskPage = () => {
     <div className='auth_container'>
       <div className='AddTaskPage_'>
         <div className='AddTaskPage__inner'>
-          <header>Odonine  add task</header>
+          <header>Odonine add task</header>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
               name="projectName"
               placeholder="Project Name"
               value={formData.projectName}
-              onChange={handleChange}
+              onChange={handleProjectNameChange}
               required
+              list="projectList"
               autoComplete="off"
             />
+            <datalist id="projectList">
+              {projectList.map((data) => (
+                <option key={data._id} value={data.projectName} />
+              ))}
+            </datalist>
             <input
               type="text"
               name="taskName"
@@ -101,7 +120,7 @@ const AddTaskPage = () => {
               name="assignedTo"
               placeholder="Assigned To"
               value={formData.assignedTo}
-              onChange={handleChange}
+              onChange={handleAssignedToChange}
               list="staffList"
               required
               autoComplete="off"
@@ -112,7 +131,6 @@ const AddTaskPage = () => {
               ))}
             </datalist>
             <button className='todo_royalBlue_button' type="submit">Add task</button>
-            {/*<Link className='navigate' to={`/sign-in`}>Signin</Link> */}
           </form>
 
           <section className='tableContainer_'>
@@ -133,7 +151,7 @@ const AddTaskPage = () => {
               <table cellpadding="0" cellspacing="0" border="0">
                 <tbody>
                   {apiData.map((data, index) => (
-                    <tr>
+                    <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{data.projectName}</td>
                       <td>{data.taskInfo}</td>
@@ -154,12 +172,9 @@ const AddTaskPage = () => {
                 </tbody>
               </table>
             </div>
-
-            {/*<div className='staff_Logout'>Logout</div> */}
           </section>
         </div>
       </div>
-
     </div>
   )
 }
