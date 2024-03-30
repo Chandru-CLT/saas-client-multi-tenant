@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import './AddTaskPage.css'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getStaffListApi } from '../../../Api/Staff';
 import { companyCreateTaskApi, getTaskListApi } from '../../../Api/Task';
 import { projectListApi } from '../../../Api/Company';
+import { taskForm } from '../../../Utils/FormValidation';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AddTaskPage = () => {
   const { organisationName } = useParams()
 
+  const [isLoading, setIsLoading] = useState(true)
   const [apiData, setapiData] = useState([])
   const [staffList, setstaffList] = useState([])
   const [projectList, setprojectList] = useState([])
   
   useEffect(() => {
+    setIsLoading(true)
+
     getTaskListApi(organisationName).then(res => {
       setapiData(res.data);
+      if (res.data !== 0) {
+        setIsLoading(false)         
+    }
     }).catch(err => {
       console.log(err);
     })
@@ -30,7 +38,7 @@ const AddTaskPage = () => {
     }).catch(err => {
       console.log(err);
     })
-  }, [apiData])
+  }, [])
 
   const [formData, setFormData] = useState({
     organisationName,
@@ -40,6 +48,8 @@ const AddTaskPage = () => {
     assignedTo: '',
     assignedToId: '',
   });
+
+  const [errors, setErrors] = useState({});
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -76,14 +86,58 @@ const AddTaskPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    companyCreateTaskApi(formData).then(res => {
-      console.log(res.data);
-      // navigate(`/${organisationName}/admin/home`)
-    }).catch(err => {
-      console.log(err);
-    })
+  
+    // Validate the form data
+    const newErrors = taskForm(formData);
+    setErrors(newErrors);
+  
+    // Check if the projectName and assignedTo inputs match the datalist records
+    const isValidProject = projectList.find((project) => project.projectName === formData.projectName);
+    const isValidAssignedTo = staffList.find((staff) => staff.name === formData.assignedTo);
+  
+    if (!isValidProject) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        projectName: 'Please select a valid project name',
+      }));
+    }
+  
+    if (!isValidAssignedTo) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        assignedTo: 'Please select a valid staff member',
+      }));
+    }
+  
+    if (Object.keys(newErrors).length === 0 && isValidProject && isValidAssignedTo) {
+      // Form data is valid, submit the form
+      const newTask = {
+        projectName: formData.projectName,
+        taskName: formData.taskName,
+        assignedTo: formData.assignedTo
+      };
+      console.log(newTask);
+      setapiData([...apiData, newTask]);
+      
+      // Reset the form fields
+      setFormData({
+        ...formData,
+        projectName: '',
+        taskName: '',
+        assignedTo: '',
+        assignedToId: '',
+      });
+  
+      companyCreateTaskApi(formData).then(res => {
+        console.log(res.data);
+        // Add the new task to the existing tasks
+      }).catch(err => {
+        console.log(err);
+      });
+    }
   };
+  
+  
 
   return (
     <div className='auth_container'>
@@ -91,46 +145,57 @@ const AddTaskPage = () => {
         <div className='AddTaskPage__inner'>
           <header>Odonine add task</header>
           <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="projectName"
-              placeholder="Project Name"
-              value={formData.projectName}
-              onChange={handleProjectNameChange}
-              required
-              list="projectList"
-              autoComplete="off"
-            />
-            <datalist id="projectList">
-              {projectList.map((data) => (
-                <option key={data._id} value={data.projectName} />
-              ))}
-            </datalist>
-            <input
-              type="text"
-              name="taskName"
-              placeholder="Task"
-              value={formData.taskName}
-              onChange={handleChange}
-              required
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              name="assignedTo"
-              placeholder="Assigned To"
-              value={formData.assignedTo}
-              onChange={handleAssignedToChange}
-              list="staffList"
-              required
-              autoComplete="off"
-            />
-            <datalist id="staffList">
-              {staffList.map((staff) => (
-                <option key={staff._id} value={staff.name} />
-              ))}
-            </datalist>
-            <button className='todo_royalBlue_button' type="submit">Add task</button>
+            <div>
+              <input
+                type="text"
+                name="projectName"
+                placeholder="Project Name"
+                value={formData.projectName}
+                onChange={handleProjectNameChange}
+                list="projectList"
+                autoComplete="off"
+              />
+              <datalist id="projectList">
+                {projectList.map((data) => (
+                  <option key={data._id} value={data.projectName} />
+                ))}
+              </datalist>
+              {errors.projectName && <div className='formError'>{errors.projectName}</div>}
+            </div>
+
+            <div>
+              <input
+                type="text"
+                name="taskName"
+                placeholder="Task"
+                value={formData.taskName}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+              {errors.taskName && <div className='formError'>{errors.taskName}</div>}
+            </div>
+            
+            <div>
+              <input
+                type="text"
+                name="assignedTo"
+                placeholder="Assigned To"
+                value={formData.assignedTo}
+                onChange={handleAssignedToChange}
+                list="staffList"
+                autoComplete="off"
+              />
+              <datalist id="staffList">
+                {staffList.map((staff) => (
+                  <option key={staff._id} value={staff.name} />
+                ))}
+              </datalist>
+              {errors.assignedTo && <div className='formError'>{errors.assignedTo}</div>}
+            </div>
+
+            <div>
+              <button className='todo_royalBlue_button' type="submit">Add task</button>
+            </div>
           </form>
 
           <section className='tableContainer_'>
@@ -150,25 +215,42 @@ const AddTaskPage = () => {
             <div class="tableContent_">
               <table cellpadding="0" cellspacing="0" border="0">
                 <tbody>
-                  {apiData.map((data, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{data.projectName}</td>
-                      <td>{data.taskInfo}</td>
-                      <td>{data.assignedTo}</td>
-                      <td>
-                        <select>
-                          <option value="assigned">Assigned</option>
-                          <option value="working">Working</option>
-                          <option value="completed">Completed</option>
-                          <option value="closed">Closed</option>
-                        </select>
-                      </td>
-                      <td>
-                        <button className='todo_royalBlue_button'>Update</button>
-                      </td>
-                    </tr>
-                  ))}
+                {isLoading ? (
+                    <ClipLoader
+                      color={"#4169e1"}
+                      loading={isLoading}
+                      css={{ display: "block", margin: "0 auto", borderColor: "red" }}
+                      size={100}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                  ) : (
+                    <>
+                      {apiData.length === 0 ? (
+                        <p>No tasks yet</p>
+                      ):(
+                        apiData.map((data, index) => (
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{data.projectName}</td>
+                            <td>{data.taskName}</td>
+                            <td>{data.assignedTo}</td>
+                            <td>
+                              <select>
+                                <option value="assigned">Assigned</option>
+                                <option value="working">Working</option>
+                                <option value="completed">Completed</option>
+                                <option value="closed">Closed</option>
+                              </select>
+                            </td>
+                            <td>
+                              <button className='todo_royalBlue_button'>Update</button>
+                            </td>
+                          </tr>
+                      ) 
+                      ))}
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>

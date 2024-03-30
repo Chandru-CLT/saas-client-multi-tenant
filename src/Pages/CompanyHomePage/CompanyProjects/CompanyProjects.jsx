@@ -1,13 +1,14 @@
-import React, { useEffect, useState, CSSProperties  } from 'react'
+import React, { useEffect, useState } from 'react'
 import './CompanyProjects.css'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { companyCreateProjectApi, projectListApi } from '../../../Api/Company';
 import { getOrganisationName } from '../../../Utils/Localstorage';
 import ClipLoader from "react-spinners/ClipLoader";
+import { projectForm } from '../../../Utils/FormValidation';
 
 const CompanyProjects = () => {
   const { organisationName } = useParams()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true)
 
   const [formData, setFormData] = useState({
@@ -15,20 +16,21 @@ const CompanyProjects = () => {
     projectName: '',
   });
 
+  const [errors, setErrors] = useState({});
 
   const [projectList, setprojectList] = useState([])
 
   useEffect(() => {
+    setIsLoading(true)
+
     projectListApi(organisationName).then(res => {
       console.log(res.data);
       setprojectList(res.data);
+      setIsLoading(false)
     }).catch(err => {
       console.log(err);
     })
-    if (projectList !== 0) {
-      setIsLoading(false)
-    }
-  }, [formData.projectName])
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,41 +39,51 @@ const CompanyProjects = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    const newErrors = projectForm(formData);
+    setErrors(newErrors);
+    console.log(formData);
+    console.log(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      // setIsLoading(true);
+      setprojectList([...projectList, { projectName: formData.projectName }]);
+      setFormData({ ...formData, projectName: '' }); // Clear the projectName input
+
     companyCreateProjectApi(formData).then(res => {
       console.log(res);
-      setFormData({ ...formData, projectName: '' }); // Clear the projectName input
-      // navigate(`/${organisationName}/admin/home`)
-      setIsLoading(false)
+      // setIsLoading(false);
     }).catch(err => {
       console.log(err);
+      setIsLoading(false);
     });
+    }
   };
-
 
   return (
     <div className='CompanyProjects_container'>
       <div className='CompanyProjects__inner'>
         <header>Odonine add your project</header>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="projectName"
-            placeholder="Project Name"
-            value={formData.projectName}
-            onChange={handleChange}
-            required
-            autoComplete="off" // Add this line
-          />
-          <button className='todo_royalBlue_button' type="submit">Add Project</button>
-          {/*<Link className='navigate' to={`/sign-in`}>Signin</Link> */}
+          <div>
+            <input
+              type="text"
+              name="projectName"
+              placeholder="Project Name"
+              value={formData.projectName}
+              onChange={handleChange}
+              autoComplete="off" // Add this line
+            />
+            {errors.name && <div className='formError'>{errors.name}</div>}
+          </div>
+          <div>
+            <button className='todo_royalBlue_button' type="submit">Add Project</button>
+          </div>
         </form>
-
 
         <div className='companyProjectList'>
           <header>Current Projects</header>
           {isLoading ? (
-              <ClipLoader
+            <ClipLoader
               color={"#4169e1"}
               loading={isLoading}
               css={{ display: "block", margin: "0 auto", borderColor: "red" }}
@@ -79,19 +91,22 @@ const CompanyProjects = () => {
               aria-label="Loading Spinner"
               data-testid="loader"
             />
-          
-            ) : (
-              <>
-                {projectList.map((data, index) => (
+          ) : (
+            <>
+              {projectList.length === 0 ? (
+                <p>No projects available</p>
+              ) : (
+                projectList.map((data, index) => (
                   <input
-                    key={index} // added key prop for unique identification
+                    key={index}
                     value={data.projectName}
                     onChange={handleChange}
                     disabled
                   />
-                ))}
-              </>
-            )}
+                ))
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

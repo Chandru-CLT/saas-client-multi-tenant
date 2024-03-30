@@ -37,7 +37,7 @@
 
 .AddTaskPage__inner input {
     border: 1px solid gray;
-    width: 20%;
+    width: 250px;
     outline: none;
     border-radius: 5px;
     height: 1rem;

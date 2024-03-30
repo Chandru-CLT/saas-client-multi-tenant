@@ -5,8 +5,6 @@ export const isValidEmail = (email) => {
     return emailRegex.test(email);
 };
 
-
-
 export const isValidPhoneNumber = (mobileNumber) => {
     const phoneRegex = /^\d{10}$/;
     return phoneRegex.test(mobileNumber);
@@ -58,3 +56,53 @@ export const validateForm = (formData) => {
 
     return errors;
 };
+
+export const staffForm = (formData) => {
+   let errors = {}
+
+    if (!formData.name) {
+    errors.name = "Name is required";
+    }
+
+    if (!formData.email) {
+        errors.email = "Email is required";
+    } else if (!isValidEmail(formData.email)) {
+        errors.email = "Invalid email format";
+    }
+
+    if (!formData.mobileNumber) {
+        errors.mobileNumber = "Mobile number is required";
+    } else if (!isValidPhoneNumber(formData.mobileNumber)) {
+        errors.mobileNumber = "Invalid mobile number format";
+    }
+
+    return errors
+}
+
+export const projectForm = (formData) => {
+    let errors =  {}
+
+    if (!formData.projectName) {
+        errors.name = "projectName is required";
+    }
+    
+    return errors;
+}
+
+export const taskForm = (formData) => {
+    let errors = {};
+
+    if (!formData.projectName) {
+        errors.projectName = "projectName is required";
+    }
+
+    if (!formData.taskName) {
+        errors.taskName = "taskName is required";
+    }
+
+    if (!formData.assignedTo) {
+        errors.assignedTo = "assignedTo is required";
+    }
+
+    return errors;
+}

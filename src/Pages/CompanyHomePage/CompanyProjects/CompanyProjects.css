@@ -55,10 +55,17 @@
 }
 
 .CompanyProjects__inner form {
+    /* border: 1px solid red; */
     display: flex;
+    justify-content: center;
     /* flex-direction: column; */
     gap: 1rem;
     margin-top: 0.5rem;
+}
+
+.CompanyProjects__inner div:first-child{
+    /* border: 1px solid red; */
+    width: 80%;
 }
 
 .CompanyProjects__inner input {
