@@ -106,3 +106,19 @@ export const taskForm = (formData) => {
 
     return errors;
 }
+
+export const signInForm = (formData) => {
+    let errors = {};
+
+    if (!formData.email) {
+        errors.email = "Email is required";
+    } else if (!isValidEmail(formData.email)) {
+        errors.email = "Invalid email format";
+    }
+
+    if (!formData.password) {
+        errors.password = "Password is required";
+    }
+
+    return errors
+}
