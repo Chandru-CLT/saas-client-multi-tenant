@@ -8,3 +8,7 @@ export const companyCreateTaskApi = (data) =>{
 export const getTaskListApi = (subDomain) => {
     return API.get(`/task/${subDomain}/get-tasklist`)
 }
+
+export const getIndiStaffTaskApi = (subDomain, userId) => {
+    return API.get(`/task/${subDomain}/get-tasklist/${userId}`)
+}

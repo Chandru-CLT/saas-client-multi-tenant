@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { staffSignInApi } from '../Api/Staff';
 import { signInForm } from '../Utils/FormValidation';
 import ClipLoader from "react-spinners/ClipLoader";
+import { saveStaffSigninData } from '../Utils/Localstorage';
 
 const Signin = () => {
     const { organisationName } = useParams()
@@ -33,7 +34,14 @@ const Signin = () => {
 
             setIsLoading(true)
             staffSignInApi(formData).then(res => {
-            console.log(res.data);
+            console.log(res.data.user);
+            const data = {
+                userId: res.data.user._id,
+                organisationName: res.data.user.organisationName,
+                userName: res.data.user.name
+            };
+            saveStaffSigninData(data)
+
             navigate(`/${organisationName}/home`)
             setIsLoading(false)
         }).catch(err => {

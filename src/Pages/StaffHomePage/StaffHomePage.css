@@ -1,3 +1,14 @@
+.tableContainer_ header{
+    border: 1px solid gray;
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.tableContainer_ h1{
+    /* border: 1px solid red; */
+    font-size: 40px;
+}
+
 /* .StaffHomePage_ {
     position: relative;
 }
