@@ -292,16 +292,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    
 
     font-weight: bold;
     font-size: 20px;
 }
 
 .auth_container__inner form {
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
     gap: 1.5rem;
     margin-top: 0.5rem;
+}
+
+.auth_container__inner div{
+    /* border: 1px solid red; */
+    width: 95%;
+}
+
+.auth_container__inner button{
+
+    width: 100%;
 }
 
 .auth_container__inner input {

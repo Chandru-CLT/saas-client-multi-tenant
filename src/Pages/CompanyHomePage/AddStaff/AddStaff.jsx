@@ -7,6 +7,7 @@ import { companyCreateStaffApi, getStaffListApi } from '../../../Api/Staff';
 // import { getTaskListApi } from '../../../Api/Task';
 import ClipLoader from "react-spinners/ClipLoader";
 import { staffForm } from '../../../Utils/FormValidation';
+import Header from '../../../Components/Header/Header';
 
 const AddStaff = () => {
     const { organisationName } = useParams()
@@ -64,6 +65,7 @@ const AddStaff = () => {
     return (
         <div className='auth_container'>
             <div className='AddStaff_container__inner'>
+                <Header/>
                 <header>Odonine add staff</header>
                 <form onSubmit={handleSubmit}>
                     <div>

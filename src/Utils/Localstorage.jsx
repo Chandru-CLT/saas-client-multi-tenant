@@ -5,16 +5,17 @@ export const saveLoginToken = (data) => {
     localStorage.setItem("userName", data.userName)
 }
 
-export const getToken = () => {
-    return localStorage.getItem("authToken");
-}
+// export const getToken = () => {
+//     return localStorage.getItem("authToken");
+// }
 
 export const getOrganisationName = () => {
     return localStorage.getItem("subDomine");
 }
 
 export const clearLocalStorage = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("organisationId");
+    localStorage.removeItem("organisationName");
+    localStorage.removeItem("subDomine");
     localStorage.removeItem("userName");
-    localStorage.removeItem("userId");
 }

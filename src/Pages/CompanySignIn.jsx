@@ -3,9 +3,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { companySigninApi } from '../Api/Auth';
 import { signInForm } from '../Utils/FormValidation';
 import { saveLoginToken } from '../Utils/Localstorage';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const CompanySignIn = () => {
     const { organisationName } = useParams()
+    
+    const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         subDomine: organisationName,
@@ -29,6 +32,9 @@ const CompanySignIn = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
+
+            setIsLoading(true)
+
             companySigninApi(formData).then(res => {
                 console.log("This is API response", res.data.user);
                 const data = {
@@ -38,6 +44,8 @@ const CompanySignIn = () => {
                     userName: res.data.user.name
                 };
                 saveLoginToken(data);
+                setIsLoading(false)
+
                 navigate(`/${organisationName}/admin/home`)
             }).catch(err => {
                 // console.log(err);
@@ -57,6 +65,7 @@ const CompanySignIn = () => {
                             placeholder="Email"
                             value={formData.email}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.email && <div className='formError'>{errors.email}</div>}
                     </div>
@@ -68,12 +77,24 @@ const CompanySignIn = () => {
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.password && <div className='formError'>{errors.password}</div>}
                     </div>
                     
                     <button className='todo_royalBlue_button' type="submit">Sign in</button>
                     <Link className='navigate' to={`/${organisationName}/signin`}>Staff login</Link>
+                    {
+                        isLoading && 
+                        <ClipLoader
+                            color={"#4169e1"}
+                            loading={isLoading}
+                            css={{ display: "block", margin: "0 auto", borderColor: "red" }}
+                            size={30}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    }
                 </form>
             </div>
         </div>

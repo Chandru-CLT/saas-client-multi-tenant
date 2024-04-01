@@ -5,6 +5,7 @@ import { companyCreateProjectApi, projectListApi } from '../../../Api/Company';
 import { getOrganisationName } from '../../../Utils/Localstorage';
 import ClipLoader from "react-spinners/ClipLoader";
 import { projectForm } from '../../../Utils/FormValidation';
+import Header from '../../../Components/Header/Header';
 
 const CompanyProjects = () => {
   const { organisationName } = useParams()
@@ -62,6 +63,7 @@ const CompanyProjects = () => {
   return (
     <div className='CompanyProjects_container'>
       <div className='CompanyProjects__inner'>
+        <Header/>
         <header>Odonine add your project</header>
         <form onSubmit={handleSubmit}>
           <div>

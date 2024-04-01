@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { companySignupApi } from '../Api/Auth';
 import { saveLoginToken } from '../Utils/Localstorage';
 import { validateForm } from '../Utils/FormValidation';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Signup = () => {
     const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState(false)
     const [subDomain, setsubDomain] = useState();
     const [formData, setFormData] = useState({
         organisationName: '',
@@ -37,6 +40,7 @@ const Signup = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
+            setIsLoading(true)
             companySignupApi(formData)
             .then((res) => {
                 console.log(res.data);
@@ -49,6 +53,7 @@ const Signup = () => {
                 };
                 saveLoginToken(data);
                 setsubDomain(res.data.subDomine);
+                setIsLoading(false)
             })
             .catch((err) => {
                 console.log(err);
@@ -72,6 +77,7 @@ const Signup = () => {
                             placeholder='Organisation Name'
                             value={formData.organisationName}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.organisationName && <div className='formError'>{errors.organisationName}</div>}
                     </div>
@@ -83,6 +89,7 @@ const Signup = () => {
                             placeholder='Name'
                             value={formData.name}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.name && <div className='formError'>{errors.name}</div>}
                     </div>
@@ -94,6 +101,7 @@ const Signup = () => {
                             placeholder='Email'
                             value={formData.email}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.email && <div className='formError'>{errors.email}</div>}
                     </div>
@@ -105,6 +113,7 @@ const Signup = () => {
                             placeholder='Number'
                             value={formData.mobileNumber}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.mobileNumber && <div className='formError'>{errors.mobileNumber}</div>}
                     </div>
@@ -115,6 +124,7 @@ const Signup = () => {
                             placeholder='Password'
                             value={formData.password}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.password && <div className='formError'>{errors.password}</div>}
                     </div>
@@ -125,12 +135,27 @@ const Signup = () => {
                             placeholder='Confirm Password'
                             value={formData.confirmPassword}
                             onChange={handleChange}
+                            autocomplete="off"
                         />
                         {errors.confirmPassword && <div className='formError'>{errors.confirmPassword}</div>}
                     </div>
-                    <button className='todo_royalBlue_button' type='submit'>
-                        Sign Up
-                    </button>
+                    <div>
+                        <button className='todo_royalBlue_button' type='submit'>
+                            Sign Up
+                        </button>
+                    </div>
+                    
+                    {
+                        isLoading && 
+                        <ClipLoader
+                            color={"#4169e1"}
+                            loading={isLoading}
+                            css={{ display: "block", margin: "0 auto", borderColor: "red" }}
+                            size={30}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    }
                 </form>
             </div>
         </div>

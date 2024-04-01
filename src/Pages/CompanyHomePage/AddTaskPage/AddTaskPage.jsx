@@ -6,6 +6,7 @@ import { companyCreateTaskApi, getTaskListApi } from '../../../Api/Task';
 import { projectListApi } from '../../../Api/Company';
 import { taskForm } from '../../../Utils/FormValidation';
 import ClipLoader from "react-spinners/ClipLoader";
+import Header from '../../../Components/Header/Header';
 
 const AddTaskPage = () => {
   const { organisationName } = useParams()
@@ -143,6 +144,7 @@ const AddTaskPage = () => {
     <div className='auth_container'>
       <div className='AddTaskPage_'>
         <div className='AddTaskPage__inner'>
+          <Header/>
           <header>Odonine add task</header>
           <form onSubmit={handleSubmit}>
             <div>

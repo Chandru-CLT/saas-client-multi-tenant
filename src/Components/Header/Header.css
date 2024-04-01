@@ -1,11 +1,18 @@
 .Header_container {
     border: 1px solid gray;
+    /* border: 1px solid red; */
 
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 2rem;
 
     padding: 0.5rem;
+}
+
+.Header_container span{
+    /* border: 1px solid red; */
+    cursor: pointer;
 }
 
 .Header_container h1 {
