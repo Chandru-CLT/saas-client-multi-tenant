@@ -1,5 +1,5 @@
 // Authentication end points
-export const companySignupEndpoint = '/api/create-company';
+export const companySignupEndpoint = '/api/create-company-testing';
 export const companySigninEndpoint = '/api/company-signin';
 
 // create-staff
